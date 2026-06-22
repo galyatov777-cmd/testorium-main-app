@@ -312,6 +312,7 @@ const TakeTestPage: React.FC = () => {
 	const [textAnswers, setTextAnswers] = useState<Record<number, string>>({}); // для type=text
 	const [finished, setFinished] = useState(false);
 	const [results, setResults] = useState<Results>({});
+	const [savedTextAnswers, setSavedTextAnswers] = useState<Record<number, string>>({});
 	const [finalScore, setFinalScore] = useState(0);
 	const [timeTaken, setTimeTaken] = useState(0);
 	const [flagged, setFlagged] = useState<Set<number>>(new Set());
@@ -466,6 +467,7 @@ const TakeTestPage: React.FC = () => {
 
 		setResults(newResults);
 		setFinalScore(lastScore);
+		setSavedTextAnswers({ ...textAnswers });
 
 		setSubmitting(false);
 		setFinished(true);
@@ -478,6 +480,7 @@ const TakeTestPage: React.FC = () => {
 		setCurrent(0);
 		setAnswers({});
 		setTextAnswers({});
+		setSavedTextAnswers({});
 		setResults({});
 		setFinalScore(0);
 		setTimeTaken(0);
@@ -518,7 +521,7 @@ const TakeTestPage: React.FC = () => {
 				test={test}
 				questions={questions}
 				answers={answers}
-				textAnswers={textAnswers}
+				textAnswers={savedTextAnswers}
 				results={results}
 				timeTaken={timeTaken}
 				finalScore={finalScore}

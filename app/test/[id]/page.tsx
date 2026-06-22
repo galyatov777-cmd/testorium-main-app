@@ -106,8 +106,6 @@ function formatTime(s: number) {
 
 const ResultScreen: React.FC<{
 	questions: Question[];
-	answers: UserAnswers;
-	textAnswers: Record<number, string>;
 	results: Results;
 	timeTaken: number;
 	onRetry: () => void;
@@ -115,8 +113,6 @@ const ResultScreen: React.FC<{
 	finalScore: number;
 }> = ({
 	questions,
-	answers,
-	textAnswers,
 	results,
 	timeTaken,
 	onRetry,
@@ -234,25 +230,6 @@ const ResultScreen: React.FC<{
 						const result = results[q.id];
 						const ok = result?.is_correct ?? false;
 						const c = colorMap[q.type];
-						const selectedIds = answers[q.id] ?? [];
-
-						const renderUserAnswer = () => {
-							if (q.type === 'text') {
-								return textAnswers[q.id] || '—';
-							}
-							if (!selectedIds.length) return '—';
-							if (q.type === 'truefalse') {
-								const ans = q.answers?.find(a => selectedIds.includes(a.id));
-								return ans?.text === 'true' ? 'Так' : 'Ні';
-							}
-							return (
-								q.answers
-									?.filter(a => selectedIds.includes(a.id))
-									.map(a => a.text)
-									.join(', ') ?? '—'
-							);
-						};
-
 						return (
 							<div
 								key={q.id}
@@ -269,10 +246,9 @@ const ResultScreen: React.FC<{
 											{q.question}
 										</p>
 										<div
-											className={`text-xs rounded-xl px-3 py-2 mb-1.5 ${ok ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}
+											className={`text-xs rounded-xl px-3 py-2 mb-1.5 font-semibold ${ok ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}
 										>
-											<span className='font-semibold'>Ваша відповідь: </span>
-											{renderUserAnswer()}
+											{ok ? 'Правильно' : 'Не правильно'}
 										</div>
 									</div>
 									<div className='shrink-0'>
@@ -312,7 +288,6 @@ const TakeTestPage: React.FC = () => {
 	const [textAnswers, setTextAnswers] = useState<Record<number, string>>({}); // для type=text
 	const [finished, setFinished] = useState(false);
 	const [results, setResults] = useState<Results>({});
-	const [savedTextAnswers, setSavedTextAnswers] = useState<Record<number, string>>({});
 	const [finalScore, setFinalScore] = useState(0);
 	const [timeTaken, setTimeTaken] = useState(0);
 	const [flagged, setFlagged] = useState<Set<number>>(new Set());
@@ -467,8 +442,6 @@ const TakeTestPage: React.FC = () => {
 
 		setResults(newResults);
 		setFinalScore(lastScore);
-		setSavedTextAnswers({ ...textAnswers });
-
 		setSubmitting(false);
 		setFinished(true);
 	}, [test, answers, textAnswers, resultId]);
@@ -480,7 +453,6 @@ const TakeTestPage: React.FC = () => {
 		setCurrent(0);
 		setAnswers({});
 		setTextAnswers({});
-		setSavedTextAnswers({});
 		setResults({});
 		setFinalScore(0);
 		setTimeTaken(0);
@@ -520,8 +492,6 @@ const TakeTestPage: React.FC = () => {
 			<ResultScreen
 				test={test}
 				questions={questions}
-				answers={answers}
-				textAnswers={savedTextAnswers}
 				results={results}
 				timeTaken={timeTaken}
 				finalScore={finalScore}

@@ -111,14 +111,7 @@ const ResultScreen: React.FC<{
 	onRetry: () => void;
 	test: Test;
 	finalScore: number;
-}> = ({
-	questions,
-	results,
-	timeTaken,
-	onRetry,
-	test,
-	finalScore,
-}) => {
+}> = ({ questions, results, timeTaken, onRetry, test, finalScore }) => {
 	const total = questions.length;
 	const correctCount = Object.values(results).filter(r => r.is_correct).length;
 	const pct = finalScore;
@@ -509,7 +502,7 @@ const TakeTestPage: React.FC = () => {
 						<BookOpen size={16} className='text-white' />
 					</div>
 					<span className='text-sm font-semibold text-slate-700'>
-						Тестування
+						Тестування.
 					</span>
 				</header>
 				<div className='flex-1 flex items-center justify-center px-6'>
